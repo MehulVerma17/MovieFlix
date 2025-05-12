@@ -37,6 +37,11 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "androidNavigationBar": {
+      "visible": "immersive",
+      "barStyle": "light",
+      "backgroundColor": "#000000"
     }
   }
 }

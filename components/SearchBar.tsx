@@ -8,9 +8,11 @@ const cardWidth = screenWidth * 0.11; // 30% of screen width
 interface Props {
   placeholder: string;
   onPress?: () => void;
+  value?: string;
+  onChangeText?: (text: string) => void; //? after name makes them optional
 }
 
-const SearchBar = ({ placeholder, onPress }: Props) => {
+const SearchBar = ({ placeholder, onPress, value, onChangeText }: Props) => {
   return (
     <View
       className="flex-row items-center bg-dark-200 rounded-full px-5 py-4 h"
@@ -25,8 +27,8 @@ const SearchBar = ({ placeholder, onPress }: Props) => {
       <TextInput
         onPress={onPress}
         placeholder={placeholder}
-        value=""
-        onChangeText={() => {}}
+        value={value}
+        onChangeText={onChangeText}
         placeholderTextColor="#a8b5db"
         className="flex-1 ml-2 text-white"
       />
