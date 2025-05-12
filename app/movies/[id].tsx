@@ -1,9 +1,12 @@
 import { icons } from "@/constants/icons";
 import { fetchMovieDetails } from "@/services/api";
+import { getSavedMovies, removeMovie, saveMovie } from "@/services/storage";
 import useFetch from "@/services/useFetch";
 import { router, useLocalSearchParams } from "expo-router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import Toast from "react-native-toast-message";
+import { useSavedMovies } from "../context/SavedMoviesContext";
 
 interface MovieInfoProps {
   label: string;
@@ -19,11 +22,53 @@ const MovieInfo = ({ label, value }: MovieInfoProps) => (
 );
 
 const MovieDetails = () => {
+  const [isSaved, setIsSaved] = useState(false);
+
   const { id } = useLocalSearchParams();
 
   const { data: movie, loading } = useFetch(() =>
     fetchMovieDetails(id as string)
   );
+
+  const { updateSavedMovies } = useSavedMovies();
+
+  useEffect(() => {
+    const checkSaved = async () => {
+      if (!movie?.id) return;
+      const saved = await getSavedMovies();
+      const exists = saved.some((m: any) => m.id === movie.id);
+      setIsSaved(exists);
+    };
+    checkSaved();
+  }, [movie]);
+
+  const handleSave = async () => {
+    if (!movie) return;
+
+    if (isSaved) {
+      // Remove movie if it's already saved
+      await removeMovie(movie.id);
+      setIsSaved(false);
+      Toast.show({
+        type: "success",
+        position: "bottom",
+        text1: "Movie removed from saved list!",
+        visibilityTime: 2000,
+      });
+    } else {
+      // Save movie if it's not already saved
+      await saveMovie(movie);
+      setIsSaved(true);
+      Toast.show({
+        type: "success",
+        position: "bottom",
+        text1: "Movie saved!",
+        visibilityTime: 2000,
+      });
+    }
+    // Update saved movies after save or remove
+    updateSavedMovies();
+  };
 
   return (
     <View className="bg-primary flex-1">
@@ -38,7 +83,17 @@ const MovieDetails = () => {
           />
         </View>
         <View className="flex-col items-start justify-center mt-5 px-5">
-          <Text className="text-white font-bold text-xl">{movie?.title}</Text>
+          <View className="flex-row items-center justify-between w-full">
+            <Text className="text-white font-bold text-xl">{movie?.title}</Text>
+            <TouchableOpacity onPress={handleSave}>
+              <Image
+                source={isSaved ? icons.savefill : icons.save}
+                className="w-6 h-6"
+                // tintColor="#fff"
+              />
+            </TouchableOpacity>
+          </View>
+
           <View className="flex-row items-center gap-x-1 mt-2">
             <Text className="text-light-200 text-sm">
               {movie?.release_date?.split("-")[0]}
