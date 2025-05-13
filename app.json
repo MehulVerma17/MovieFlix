@@ -16,7 +16,15 @@
         "foregroundImage": "./assets/images/logo.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.mehulverma.movie_app",
+      "permissions": [
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "INTERNET",
+        "POST_NOTIFICATIONS",
+        "ACCESS_NETWORK_STATE"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -42,6 +50,12 @@
       "visible": "immersive",
       "barStyle": "light",
       "backgroundColor": "#000000"
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "8cd00b91-348b-4596-8fcb-db922048a9e7"
+      }
     }
   }
 }

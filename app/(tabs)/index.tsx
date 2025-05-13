@@ -57,7 +57,9 @@ export default function Index() {
             className="mt-10 self-center"
           />
         ) : moviesError || trendingError ? (
-          <Text>Error: {moviesError?.message || trendingError?.message}</Text>
+          <Text className="text-lg text-white font-bold mb-3">
+            Error: {moviesError?.message || trendingError?.message}
+          </Text>
         ) : (
           <View className="flex-1 mt-5">
             <SearchBar
